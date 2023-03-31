@@ -30,13 +30,15 @@ async function handleSession(websocket) {
 
 const websocketHandler = async (request) => {
   const upgradeHeader = request.headers.get("Upgrade");
+  const key = request.headers.get("sec-websocket-key");
+  console.log("Key", key);
   if (upgradeHeader !== "websocket") {
     return new Response("Expected websocket", { status: 400 });
   }
 
   const [client, server] = Object.values(new WebSocketPair());
   await handleSession(server);
-
+  console.log("CLIENT", JSON.parse(client));
   return new Response(null, {
     status: 101,
     webSocket: client,
